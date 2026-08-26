@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelance Scope Creep & Usage Rights Estimator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0b0f19',
+          surface: '#111827',
+          surface2: '#161f30',
+          border: '#232f45',
+          accent: '#6366f1',
+          accent2: '#8b5cf6',
+          danger: '#f43f5e',
+          warn: '#f59e0b',
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  .glow-red { text-shadow: 0 0 40px rgba(244, 63, 94, 0.35); }
+  .card { background: linear-gradient(180deg, #131b2c 0%, #0f1523 100%); }
+  .input-field {
+    background-color: #0b101c;
+    border: 1px solid #232f45;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.25);
+  }
+  .tab-btn { transition: all .15s ease; }
+  .tab-btn.active {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    color: white;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+  }
+  .tab-btn:not(.active) { color: #94a3b8; }
+  .result-pop {
+    animation: pop .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes pop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  ::selection { background: #6366f1; color: white; }
+</style>
+</head>
+<body class="bg-bg text-slate-100 min-h-screen">
+
+<!-- Header -->
+<header class="border-b border-border/60 bg-bg/80 backdrop-blur sticky top-0 z-30">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-accent to-accent2 flex items-center justify-center font-black text-lg">$</div>
+      <div>
+        <p class="font-bold text-sm sm:text-base leading-tight">Scope Creep Estimator</p>
+        <p class="text-[11px] text-slate-500 leading-tight">for freelancers &amp; creators</p>
+      </div>
+    </div>
+    <a href="#waitlist" class="text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2 rounded-lg bg-surface2 border border-border hover:border-accent transition-colors">Join Waitlist</a>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+
+  <!-- Hero -->
+  <div class="text-center mb-10 sm:mb-14">
+    <p class="inline-block text-[11px] sm:text-xs font-bold tracking-widest text-accent2 uppercase mb-3 bg-accent/10 border border-accent/30 rounded-full px-3 py-1">Free Instant Calculator</p>
+    <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-4">
+      How much money are you<br class="hidden sm:block"> <span class="text-transparent bg-clip-text bg-gradient-to-r from-danger to-warn">giving away for free?</span>
+    </h1>
+    <p class="text-slate-400 text-sm sm:text-lg max-w-xl mx-auto">
+      Find out what unbilled revisions and free usage rights are really costing you — in about 15 seconds.
+    </p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-2 mb-6 max-w-md mx-auto bg-surface2/60 border border-border rounded-xl p-1.5">
+    <button id="tabScope" onclick="switchTab('scope')" class="tab-btn active flex-1 rounded-lg py-2.5 text-sm sm:text-base font-bold">Scope Creep</button>
+    <button id="tabUsage" onclick="switchTab('usage')" class="tab-btn flex-1 rounded-lg py-2.5 text-sm sm:text-base font-bold">Usage Rights</button>
+  </div>
+
+  <!-- ===================== MODE 1: SCOPE CREEP ===================== -->
+  <section id="panelScope" class="grid md:grid-cols-2 gap-5 sm:gap-6">
+    <div class="card border border-border rounded-2xl p-5 sm:p-7">
+      <h2 class="font-bold text-lg mb-1">Project Details</h2>
+      <p class="text-slate-500 text-sm mb-5">Tell us about the flat-rate project.</p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Original Quoted Fee ($)</label>
+          <input type="number" id="quotedFee" value="2000" min="0" step="any" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium" placeholder="e.g. 2000">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Estimated Hours Needed</label>
+          <input type="number" id="estHours" value="20" min="0" step="any" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium" placeholder="e.g. 20">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Actual Hours Worked <span class="text-slate-600">(incl. revisions, calls, tweaks)</span></label>
+          <input type="number" id="actualHours" value="34" min="0" step="any" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium" placeholder="e.g. 34">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Target Hourly Rate ($)</label>
+          <input type="number" id="targetRate" value="75" min="0" step="any" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium" placeholder="75">
+        </div>
+      </div>
+    </div>
+
+    <div class="card border border-border rounded-2xl p-5 sm:p-7 flex flex-col">
+      <h2 class="font-bold text-lg mb-1">Your Results</h2>
+      <p class="text-slate-500 text-sm mb-5">Updates live as you type.</p>
+
+      <div id="scopeWarning" class="rounded-xl bg-danger/10 border border-danger/30 px-4 py-3 mb-5 text-sm font-semibold text-danger-200 text-danger"></div>
+
+      <div class="text-center py-4 sm:py-6 mb-5 rounded-xl bg-black/20 border border-border">
+        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2">Lost Revenue</p>
+        <p id="lostRevenue" class="result-pop text-4xl sm:text-5xl font-black text-danger glow-red">$0</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-surface2/60 border border-border rounded-lg p-3.5 text-center">
+          <p class="text-[11px] text-slate-500 font-semibold mb-1">Quoted Hourly Rate</p>
+          <p id="quotedRate" class="text-xl font-bold text-slate-200">$0</p>
+        </div>
+        <div class="bg-surface2/60 border border-border rounded-lg p-3.5 text-center">
+          <p class="text-[11px] text-slate-500 font-semibold mb-1">True Hourly Rate</p>
+          <p id="trueRate" class="text-xl font-bold text-warn">$0</p>
+        </div>
+      </div>
+
+      <div class="mt-auto flex justify-between text-xs text-slate-500 border-t border-border pt-4">
+        <span>Unbilled Extra Hours</span>
+        <span id="extraHours" class="font-bold text-slate-300">0 hrs</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MODE 2: USAGE RIGHTS ===================== -->
+  <section id="panelUsage" class="hidden grid md:grid-cols-2 gap-5 sm:gap-6">
+    <div class="card border border-border rounded-2xl p-5 sm:p-7">
+      <h2 class="font-bold text-lg mb-1">Deal Details</h2>
+      <p class="text-slate-500 text-sm mb-5">Tell us about the sponsorship deal.</p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Content Platform</label>
+          <select id="platform" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium">
+            <option>YouTube</option>
+            <option>Instagram</option>
+            <option>TikTok</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Base Sponsorship / Deliverable Fee ($)</label>
+          <input type="number" id="baseFee" value="1500" min="0" step="any" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium" placeholder="e.g. 1500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1.5">Requested Usage Rights</label>
+          <select id="usageRights" class="input-field w-full rounded-lg px-3.5 py-2.5 text-sm font-medium">
+            <option value="1.0">Organic Channel Only (1.0x)</option>
+            <option value="1.5">30-Day Paid Ads / Whitelisting (+50% / 1.5x)</option>
+            <option value="2.0">90-Day Paid Ads / Whitelisting (+100% / 2.0x)</option>
+            <option value="3.0">Perpetual / Unlimited License (+200% / 3.0x)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card border border-border rounded-2xl p-5 sm:p-7 flex flex-col">
+      <h2 class="font-bold text-lg mb-1">Your Results</h2>
+      <p class="text-slate-500 text-sm mb-5">Updates live as you type.</p>
+
+      <div id="usageWarning" class="rounded-xl bg-danger/10 border border-danger/30 px-4 py-3 mb-5 text-sm font-semibold text-danger"></div>
+
+      <div class="text-center py-4 sm:py-6 mb-5 rounded-xl bg-black/20 border border-border">
+        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2">Recommended Total Deal Value</p>
+        <p id="totalDealValue" class="result-pop text-4xl sm:text-5xl font-black text-danger glow-red">$0</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-surface2/60 border border-border rounded-lg p-3.5 text-center">
+          <p class="text-[11px] text-slate-500 font-semibold mb-1">Base Fee</p>
+          <p id="baseFeeDisplay" class="text-xl font-bold text-slate-200">$0</p>
+        </div>
+        <div class="bg-surface2/60 border border-border rounded-lg p-3.5 text-center">
+          <p class="text-[11px] text-slate-500 font-semibold mb-1">Additional License Fee</p>
+          <p id="licenseFee" class="text-xl font-bold text-warn">$0</p>
+        </div>
+      </div>
+
+      <div class="mt-auto flex justify-between text-xs text-slate-500 border-t border-border pt-4">
+        <span>Platform</span>
+        <span id="platformDisplay" class="font-bold text-slate-300">YouTube</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WAITLIST CTA ===================== -->
+  <section id="waitlist" class="mt-14 sm:mt-20 scroll-mt-24">
+    <div class="relative overflow-hidden rounded-3xl border border-accent/30 bg-gradient-to-br from-surface via-surface to-accent/10 p-6 sm:p-10 text-center">
+      <div class="absolute -top-24 -right-24 w-72 h-72 bg-accent/20 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-accent2/20 rounded-full blur-3xl"></div>
+
+      <div class="relative">
+        <h2 class="text-2xl sm:text-3xl font-black mb-2">Stop having awkward client money conversations.</h2>
+        <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto mb-6">
+          Send professional 1-Tap Change Order and Usage Rights approval links directly to your clients.
+        </p>
+
+        <form id="waitlistForm" class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto" onsubmit="handleWaitlistSubmit(event)">
+          <input type="email" id="waitlistEmail" required placeholder="you@email.com"
+            class="input-field w-full sm:flex-1 rounded-lg px-4 py-3 text-sm font-medium">
+          <button type="submit" class="w-full sm:w-auto whitespace-nowrap font-bold text-sm px-5 py-3 rounded-lg bg-gradient-to-r from-accent to-accent2 hover:opacity-90 transition-opacity shadow-lg shadow-accent/30">
+            Get 50% Off Early Access
+          </button>
+        </form>
+        <p id="waitlistMsg" class="text-sm font-semibold text-emerald-400 mt-3 hidden">You're on the list! We'll be in touch soon.</p>
+
+        <p class="text-[11px] text-slate-500 mt-4">100% free tool. No credit card required.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center text-xs text-slate-600 mt-12 pb-4">
+    Built for freelancers &amp; creators. Estimates are directional, not accounting advice.
+  </footer>
+
+</main>
+
+<script>
+  // ---------- Tabs ----------
+  function switchTab(tab) {
+    const scopePanel = document.getElementById('panelScope');
+    const usagePanel = document.getElementById('panelUsage');
+    const tabScope = document.getElementById('tabScope');
+    const tabUsage = document.getElementById('tabUsage');
+
+    if (tab === 'scope') {
+      scopePanel.classList.remove('hidden');
+      usagePanel.classList.add('hidden');
+      tabScope.classList.add('active');
+      tabUsage.classList.remove('active');
+    } else {
+      scopePanel.classList.add('hidden');
+      usagePanel.classList.remove('hidden');
+      tabUsage.classList.add('active');
+      tabScope.classList.remove('active');
+    }
+  }
+
+  function fmtMoney(n) {
+    if (!isFinite(n)) n = 0;
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  // ---------- Mode 1: Scope Creep ----------
+  function calcScope() {
+    const quotedFee = parseFloat(document.getElementById('quotedFee').value) || 0;
+    const estHours = parseFloat(document.getElementById('estHours').value) || 0;
+    const actualHours = parseFloat(document.getElementById('actualHours').value) || 0;
+    const targetRate = parseFloat(document.getElementById('targetRate').value) || 0;
+
+    const quotedHourlyRate = estHours > 0 ? quotedFee / estHours : 0;
+    const trueHourlyRate = actualHours > 0 ? quotedFee / actualHours : 0;
+    const unbilledExtraHours = actualHours - estHours;
+    const lostRevenue = unbilledExtraHours > 0 ? unbilledExtraHours * targetRate : 0;
+
+    document.getElementById('quotedRate').textContent = fmtMoney(quotedHourlyRate) + '/hr';
+    document.getElementById('trueRate').textContent = fmtMoney(trueHourlyRate) + '/hr';
+    document.getElementById('extraHours').textContent = (unbilledExtraHours > 0 ? unbilledExtraHours : 0).toLocaleString('en-US', { maximumFractionDigits: 1 }) + ' hrs';
+
+    const lostEl = document.getElementById('lostRevenue');
+    lostEl.textContent = fmtMoney(lostRevenue);
+
+    const warningEl = document.getElementById('scopeWarning');
+    if (lostRevenue > 0) {
+      warningEl.textContent = `⚠️ You gave away ${fmtMoney(lostRevenue)} of unbilled work on this project!`;
+      warningEl.classList.remove('hidden');
+    } else if (unbilledExtraHours <= 0 && estHours > 0) {
+      warningEl.textContent = `✅ Nice — you stayed within scope on this one.`;
+      warningEl.classList.remove('hidden');
+      warningEl.classList.remove('bg-danger/10', 'border-danger/30', 'text-danger');
+      warningEl.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+      lostEl.classList.remove('text-danger', 'glow-red');
+      lostEl.classList.add('text-emerald-400');
+      document.getElementById('lostRevenue').textContent = fmtMoney(lostRevenue);
+      requestPop(lostEl);
+      return;
+    } else {
+      warningEl.classList.add('hidden');
+    }
+
+    warningEl.classList.remove('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+    warningEl.classList.add('bg-danger/10', 'border-danger/30', 'text-danger');
+    lostEl.classList.remove('text-emerald-400');
+    lostEl.classList.add('text-danger', 'glow-red');
+
+    requestPop(lostEl);
+  }
+
+  // ---------- Mode 2: Usage Rights ----------
+  function calcUsage() {
+    const platform = document.getElementById('platform').value;
+    const baseFee = parseFloat(document.getElementById('baseFee').value) || 0;
+    const multiplier = parseFloat(document.getElementById('usageRights').value) || 1;
+
+    const totalDealValue = baseFee * multiplier;
+    const licenseFee = totalDealValue - baseFee;
+
+    document.getElementById('platformDisplay').textContent = platform;
+    document.getElementById('baseFeeDisplay').textContent = fmtMoney(baseFee);
+    document.getElementById('licenseFee').textContent = fmtMoney(licenseFee);
+
+    const totalEl = document.getElementById('totalDealValue');
+    totalEl.textContent = fmtMoney(totalDealValue);
+
+    const warningEl = document.getElementById('usageWarning');
+    if (licenseFee > 0) {
+      warningEl.textContent = `⚠️ Don't transfer ad rights for free! You should bill an additional ${fmtMoney(licenseFee)} for this license.`;
+      warningEl.classList.remove('hidden');
+    } else {
+      warningEl.classList.add('hidden');
+    }
+
+    requestPop(totalEl);
+  }
+
+  function requestPop(el) {
+    el.classList.remove('result-pop');
+    void el.offsetWidth;
+    el.classList.add('result-pop');
+  }
+
+  document.querySelectorAll('#panelScope input').forEach(el => el.addEventListener('input', calcScope));
+  document.querySelectorAll('#panelUsage input, #panelUsage select').forEach(el => el.addEventListener('input', calcUsage));
+
+  calcScope();
+  calcUsage();
+
+  // ---------- Waitlist form (front-end only, Day 1 validation) ----------
+  function handleWaitlistSubmit(e) {
+    e.preventDefault();
+    const emailInput = document.getElementById('waitlistEmail');
+    const msg = document.getElementById('waitlistMsg');
+    const btn = e.target.querySelector('button[type="submit"]');
+
+    if (!emailInput.value) return;
+
+    // Store locally for this Day-1 validation test (no backend wired up yet).
+    try {
+      const existing = JSON.parse(localStorage.getItem('scopeCreepWaitlist') || '[]');
+      existing.push({ email: emailInput.value, ts: new Date().toISOString() });
+      localStorage.setItem('scopeCreepWaitlist', JSON.stringify(existing));
+    } catch (err) {}
+
+    btn.textContent = 'You\'re In! 🎉';
+    btn.disabled = true;
+    msg.classList.remove('hidden');
+    emailInput.disabled = true;
+  }
+</script>
+
+</body>
+</html>
