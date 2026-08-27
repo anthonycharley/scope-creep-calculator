@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScopeShield — 1-Tap Change Order & Usage Rights Links</title>
+<title>RateGuard — 1-Tap Change Order & Usage Rights Links</title>
 <meta name="description" content="Turn unbilled client revisions and surprise usage requests into professional 1-tap paid change orders in 30 seconds.">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -88,7 +88,7 @@
         </div>
       </div>
       <div>
-        <p class="text-lg sm:text-xl font-bold tracking-tight leading-tight text-white">Scope<span class="text-emerald-400">Shield</span></p>
+        <p class="text-lg sm:text-xl font-bold tracking-tight leading-tight text-white">Rate<span class="text-emerald-400">Guard</span></p>
         <p class="text-[11px] text-slate-500 leading-tight">1-Tap Change Order Links</p>
       </div>
     </div>
@@ -366,7 +366,7 @@
   </div>
 
   <footer class="text-center text-xs text-slate-600 pb-8 px-4">
-    &copy; 2026 ScopeShield. Built for freelancers &amp; creators. Estimates are directional, not accounting advice.
+    &copy; 2026 RateGuard. Built for freelancers &amp; creators. Estimates are directional, not accounting advice.
   </footer>
 
 </main>
@@ -492,9 +492,9 @@
 
     // Store locally for this Day-1 validation test (no backend wired up yet).
     try {
-      const existing = JSON.parse(localStorage.getItem('scopeShieldReservations') || '[]');
+      const existing = JSON.parse(localStorage.getItem('rateGuardReservations') || '[]');
       existing.push({ email: emailInput.value, ts: new Date().toISOString() });
-      localStorage.setItem('scopeShieldReservations', JSON.stringify(existing));
+      localStorage.setItem('rateGuardReservations', JSON.stringify(existing));
     } catch (err) {}
 
     btn.textContent = 'You\'re In! 🎉';
