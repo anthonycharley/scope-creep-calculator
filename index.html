@@ -63,6 +63,13 @@
   .hero-glow {
     background: radial-gradient(60% 60% at 50% 0%, rgba(99,102,241,0.25) 0%, rgba(11,15,25,0) 70%);
   }
+  .hero-logo {
+    animation: heroLogoIn .8s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes heroLogoIn {
+    0% { opacity: 0; transform: translateY(40px) scale(.85); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
   ::selection { background: #6366f1; color: white; }
 </style>
 </head>
@@ -71,10 +78,17 @@
 <!-- Header -->
 <header class="border-b border-border/60 bg-bg/80 backdrop-blur sticky top-0 z-30">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-accent to-accent2 flex items-center justify-center font-black text-lg">S</div>
+    <div class="flex items-center gap-3">
+      <div class="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-400 p-0.5 shadow-lg shadow-indigo-500/20">
+        <div class="flex h-full w-full items-center justify-center rounded-[10px] bg-slate-950">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-emerald-400">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+      </div>
       <div>
-        <p class="font-bold text-sm sm:text-base leading-tight">ScopeShield</p>
+        <p class="text-lg sm:text-xl font-bold tracking-tight leading-tight text-white">Scope<span class="text-emerald-400">Shield</span></p>
         <p class="text-[11px] text-slate-500 leading-tight">1-Tap Change Order Links</p>
       </div>
     </div>
@@ -92,6 +106,16 @@
   <!-- ===================== HERO ===================== -->
   <section class="relative hero-glow overflow-hidden">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-14 sm:pt-24 pb-14 sm:pb-20 text-center relative">
+      <div class="hero-logo flex justify-center mb-6">
+        <div class="relative flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-400 p-0.5 shadow-lg shadow-indigo-500/30">
+          <div class="flex h-full w-full items-center justify-center rounded-[14px] bg-slate-950">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="h-9 w-9 sm:h-10 sm:w-10 text-emerald-400">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
       <p class="inline-block text-[11px] sm:text-xs font-bold tracking-widest text-accent2 uppercase mb-5 bg-accent/10 border border-accent/30 rounded-full px-4 py-1.5">
         Built for Freelancers, Agencies &amp; UGC Creators
       </p>
@@ -325,10 +349,10 @@
             </li>
           </ul>
 
-          <form id="reserveForm" class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto" onsubmit="handleReserveSubmit(event)">
+          <form id="reserveForm" class="flex flex-col items-center justify-center gap-3 max-w-md mx-auto" onsubmit="handleReserveSubmit(event)">
             <input type="email" id="reserveEmail" required placeholder="you@email.com"
-              class="input-field w-full sm:flex-1 rounded-lg px-4 py-3 text-sm font-medium">
-            <button type="submit" class="w-full sm:w-auto whitespace-nowrap font-bold text-sm px-5 py-3 rounded-lg bg-lime text-bg hover:brightness-95 transition-all shadow-lg shadow-lime/20">
+              class="input-field w-full rounded-lg px-4 py-3 text-sm font-medium">
+            <button type="submit" class="w-full whitespace-nowrap font-bold text-sm px-5 py-3 rounded-lg bg-lime text-bg hover:brightness-95 transition-all shadow-lg shadow-lime/20">
               Reserve My Spot ($1 Refundable Deposit)
             </button>
           </form>
